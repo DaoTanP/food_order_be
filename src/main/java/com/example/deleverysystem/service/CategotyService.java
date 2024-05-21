@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class CategotyService {
 
@@ -16,8 +15,7 @@ public class CategotyService {
         this.categotyRepository = categotyRepository;
     }
 
-    public List<Category> findAll(){
+    public List<Category> findAll() {
         return categotyRepository.findAll();
     }
-
 }

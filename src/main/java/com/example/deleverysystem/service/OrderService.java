@@ -76,10 +76,6 @@ public class OrderService {
             orderItem.setSubtotal(orderItem.getItem().getPrice() * orderItem.getQuantity());
             orderItemRepository.save(orderItem);
         }
-
         return "Order created successfully!";
     }
-
-
-
 }

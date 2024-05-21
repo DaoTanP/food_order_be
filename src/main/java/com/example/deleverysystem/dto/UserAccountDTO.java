@@ -1,17 +1,12 @@
 package com.example.deleverysystem.dto;
-
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Setter
 @Getter
 @Component
 public class UserAccountDTO {
-
     private String displayName;
     private String userName ;
     private String password ;
@@ -32,16 +27,4 @@ public class UserAccountDTO {
                 ", role='" + role + '\'' +
                 '}';
     }
-
-//    private List<UserAccountDTO> userInfoList;
-//
-//    // existing getters and setters...
-//
-//    public List<UserAccountDTO> getUserInfoList() {
-//        return userInfoList;
-//    }
-//
-//    public void setUserInfoList(List<UserAccountDTO> userInfoList) {
-//        this.userInfoList = userInfoList;
-//    }
 }

@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/cart")
 public class CartController {
-
 
     @GetMapping("/")
     public String testing() {
@@ -47,6 +45,5 @@ public class CartController {
     public String updateCart() {
         return "Cart updated successfully!";
     }
-
 
 }

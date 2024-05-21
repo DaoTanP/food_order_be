@@ -30,19 +30,16 @@ public class AdminController {
     @Autowired
     public UserAccountDTO userAccountDTO;
 
-
     @Autowired
     public UserAccountMapper userAccountMapper;
 
     @Autowired
     public UserInfoMapper userInfoMapper;
 
-
     @GetMapping("/")
-    public String testing(){
+    public String testing() {
         return "ADMIN LEVEL ACCESS";
     }
-
 
     @GetMapping("/all")
     public ResponseEntity<List<UserAccountDTO>> getAllUser() {
@@ -50,44 +47,36 @@ public class AdminController {
         return ResponseEntity.ok(userInfoList.stream().map(this::mapToUserAccountDTO).collect(Collectors.toList()));
     }
 
-     private UserAccountDTO mapToUserAccountDTO(UserInfo userInfo) {
+    private UserAccountDTO mapToUserAccountDTO(UserInfo userInfo) {
         return userAccountMapper.mapToUserAccountDTO(userInfo);
     }
 
-
     @GetMapping("/find/{id}")
-    public ResponseEntity<UserInfo> getUserById(@PathVariable("id") Integer id){
-        UserInfo  user =  userInfoService.findById(id);
-            return ResponseEntity.ok(user); // Trả về 200 OK và đối tượng user
-
+    public ResponseEntity<UserInfo> getUserById(@PathVariable("id") Integer id) {
+        UserInfo user = userInfoService.findById(id);
+        return ResponseEntity.ok(user); // Trả về 200 OK và đối tượng user
     }
 
     @PostMapping("/create")
-    public String createUser(@RequestBody UserInfoDTO userInfoDTO){
+    public String createUser(@RequestBody UserInfoDTO userInfoDTO) {
         UserInfo userInfo = new UserInfo();
         userInfo.setDisplayName(userInfoDTO.getDisplayName());
         userInfo.setEmail(userInfoDTO.getEmail());
         userInfo.setPhone(userInfoDTO.getPhone());
-
-         userInfoService.create(userInfo);
-        return "User Created Successfully .Generated ID is : "+userInfo .getUserId();
+        userInfoService.create(userInfo);
+        return "User Created Successfully .Generated ID is : " + userInfo.getUserId();
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateUserById(@PathVariable("id") Integer id, @RequestBody UserInfoDTO userInfoDTO){
-        userInfoService.update(id,userInfoMapper.mapToUserInfo(userInfoDTO));
+    public ResponseEntity<String> updateUserById(@PathVariable("id") Integer id, @RequestBody UserInfoDTO userInfoDTO) {
+        userInfoService.update(id, userInfoMapper.mapToUserInfo(userInfoDTO));
         return ResponseEntity.ok("User Updated Successfully .");
     }
 
-//    @DeleteMapping("/delete/{id}")    // DELETE METHOD
-//    public String deleteUser(@PathVariable("id") Integer id){
-//        userInfoService.deleteById(id);
-//        return "User Deleted Successfully .";
-//    }
-
-
+    // @DeleteMapping("/delete/{id}") // DELETE METHOD
+    // public String deleteUser(@PathVariable("id") Integer id){
+    // userInfoService.deleteById(id);
+    // return "User Deleted Successfully .";
+    // }
 
 }
-
-
-

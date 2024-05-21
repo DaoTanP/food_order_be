@@ -1,6 +1,5 @@
 package com.example.deleverysystem.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +18,4 @@ public class BlacklistedToken {
     private String token;
 
     private Instant expirationTime;
-
-
 }

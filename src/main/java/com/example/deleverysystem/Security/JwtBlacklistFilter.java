@@ -19,17 +19,16 @@ public class JwtBlacklistFilter extends GenericFilterBean {
         this.tokenBlacklistRepository = tokenBlacklistRepository;
     }
 
-    @Override   
-    public void doFilter(ServletRequest request, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token != null && tokenBlacklistRepository.existsByToken(token)) {
-              servletResponse.getWriter().write("Token is blacklisted");
+            servletResponse.getWriter().write("Token is blacklisted");
             SecurityContextHolder.clearContext();
-
         }
-
-            filterChain.doFilter(request, servletResponse);
+        filterChain.doFilter(request, servletResponse);
     }
 }

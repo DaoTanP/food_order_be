@@ -1,6 +1,5 @@
 package com.example.deleverysystem.service;
 
-
 import com.example.deleverysystem.dto.LoginResponseDTO;
 import com.example.deleverysystem.entity.ApplicationUser;
 import com.example.deleverysystem.entity.BlacklistedToken;
@@ -10,7 +9,6 @@ import com.example.deleverysystem.repository.RoleRepository;
 import com.example.deleverysystem.repository.TokenBlacklistRepository;
 import com.example.deleverysystem.repository.UserInfoRepository;
 import com.example.deleverysystem.repository.UserRepository;
-import jakarta.servlet.http.PushBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +18,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.plaf.PanelUI;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,27 +28,26 @@ import java.util.stream.Collectors;
 public class AuthenticationService {
 
     @Autowired
-    private UserRepository userRepository ;
+    private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository ;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder ;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private AuthenticationManager authenticationManager ;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private TokenService tokenService ;
+    private TokenService tokenService;
     @Autowired
     private UserInfoRepository userInfoRepository;
 
     @Autowired
     private TokenBlacklistRepository tokenBlacklistRepository;
 
-    public ApplicationUser registerUser(String displayName ,String username, String password){
-
+    public ApplicationUser registerUser(String displayName, String username, String password) {
 
         String endcodedPassword = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority("USER").get();
@@ -74,49 +69,36 @@ public class AuthenticationService {
 
         // Set the user to the UserInfo
         userInfo.setUserAccount(user);
-
-
         return userRepository.save(user);
-
-
-
     }
 
-
-
-    public ResponseEntity<LoginResponseDTO>  loginUser(String username, String password){
-
+    public ResponseEntity<LoginResponseDTO> loginUser(String username, String password) {
         try {
-            Authentication auth  = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username,password)
-            );
-            String token  = tokenService.generateJwt(auth);
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+            String token = tokenService.generateJwt(auth);
             ApplicationUser user = userRepository.findByUsername(username).get();
             Set<Role> roles = user.getAuthorities().stream()
                     .map(authority -> new Role(authority.getAuthority()))
                     .collect(Collectors.toSet());
-            return  ResponseEntity.ok(new LoginResponseDTO(token));
+            return ResponseEntity.ok(new LoginResponseDTO(token));
 
-        }catch(AuthenticationException e){
+        } catch (AuthenticationException e) {
             return ResponseEntity.status(401).build();
         }
-
-
-
-
     }
 
     public void logout(String token) {
         BlacklistedToken blacklistedToken = new BlacklistedToken();
         blacklistedToken.setToken(token);
-        blacklistedToken.setExpirationTime(Instant.now().plusSeconds(360)); // replace jwtExpirationTime with your token's lifetime
+        blacklistedToken.setExpirationTime(Instant.now().plusSeconds(360)); // replace jwtExpirationTime with your
+                                                                            // token's lifetime
         tokenBlacklistRepository.save(blacklistedToken);
     }
 
-
     public void changePassword(String username, String oldPassword, String newPassword, String confirmPassword) {
-        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
-
+        ApplicationUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
