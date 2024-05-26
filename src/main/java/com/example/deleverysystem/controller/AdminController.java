@@ -8,10 +8,8 @@ import com.example.deleverysystem.mapper.UserInfoMapper;
 import com.example.deleverysystem.repository.UserInfoRepository;
 import com.example.deleverysystem.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.Repository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 import java.util.stream.Collectors;

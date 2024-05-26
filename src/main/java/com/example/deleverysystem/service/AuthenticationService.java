@@ -41,13 +41,14 @@ public class AuthenticationService {
 
     @Autowired
     private TokenService tokenService;
+
     @Autowired
-    private UserInfoRepository userInfoRepository;
+    private CartService cartService;
 
     @Autowired
     private TokenBlacklistRepository tokenBlacklistRepository;
 
-    public ApplicationUser registerUser(String displayName, String username, String password) {
+    public ApplicationUser registerUser(String displayName, String username, String password) throws Exception {
 
         String endcodedPassword = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority("USER").get();
@@ -59,6 +60,8 @@ public class AuthenticationService {
         // Create a new UserInfo object and set the fullname
         UserInfo userInfo = new UserInfo();
         userInfo.setDisplayName(displayName);
+
+        cartService.createCart(userInfo);
 
         // Create a new ApplicationUser and set the UserInfo
         ApplicationUser user = new ApplicationUser(username, endcodedPassword, authorities);

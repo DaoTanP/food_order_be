@@ -19,13 +19,13 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegistrationDTO body) {
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationDTO body) throws Exception {
         if (!body.getPassword().equals(body.getConfirmPassword())) {
             return ResponseEntity.badRequest().body("Error: Password and Confirm Password do not match!");
         }
         ApplicationUser applicationUser = authenticationService.registerUser(body.getDisplayName(), body.getUserName(),
                 body.getPassword());
-        return ResponseEntity.ok().body("User registered successfully!");
+        return ResponseEntity.ok().body(applicationUser);
     }
 
     @PostMapping("/login")
