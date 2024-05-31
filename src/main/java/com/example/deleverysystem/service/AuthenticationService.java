@@ -41,7 +41,6 @@ public class AuthenticationService {
 
     @Autowired
     private TokenService tokenService;
-
     @Autowired
     private CartService cartService;
 
@@ -61,14 +60,14 @@ public class AuthenticationService {
         UserInfo userInfo = new UserInfo();
         userInfo.setDisplayName(displayName);
 
-        cartService.createCart(userInfo);
-
         // Create a new ApplicationUser and set the UserInfo
         ApplicationUser user = new ApplicationUser(username, endcodedPassword, authorities);
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
         user.setUserInfo(userInfo);
+
+        cartService.createCart(userInfo);
 
         // Set the user to the UserInfo
         userInfo.setUserAccount(user);
