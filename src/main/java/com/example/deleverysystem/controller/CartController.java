@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,18 +47,23 @@ public class CartController {
     }
 
     @PostMapping("/addtocart")
-    public ResponseEntity<Cart> addToCart(HttpServletRequest request, @RequestBody CartRequestDTO cartDTO) {
+    public ResponseEntity<String> addToCart(HttpServletRequest request, @RequestBody CartRequestDTO cartDTO) {
         try {
             Cart cart = cartService.addToCart(request, cartDTO);
-            return ResponseEntity.ok(cart);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @GetMapping("/removefromcart")
-    public String removeFromCart() {
-        return "Product removed from cart successfully!";
+    @GetMapping("/removefromcart/{cartItemId}")
+    public ResponseEntity<String> removeFromCart(HttpServletRequest request, @PathVariable Integer cartItemId) {
+        try {
+            cartService.removeFromCart(request, cartItemId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @GetMapping("/checkout")

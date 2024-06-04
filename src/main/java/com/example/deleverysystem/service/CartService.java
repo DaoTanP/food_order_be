@@ -69,21 +69,17 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Cart removeFromCart(HttpServletRequest request, CartRequestDTO cartDTO) throws Exception {
+    public void removeFromCart(HttpServletRequest request, Integer cartItemId) throws Exception {
         Cart cart = getUserCart(request);
 
-        MenuItems menuItem = menuItemRepository.findById(cartDTO.getMenuItemId())
-                .orElseThrow(() -> new ErrorMessage(HttpStatus.NOT_FOUND, "Menu item not found: "));
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new ErrorMessage(HttpStatus.NOT_FOUND, "Cart item not found: "));
+        if (cart.getCartItems().indexOf(cartItem) == -1)
+            throw new ErrorMessage(HttpStatus.BAD_REQUEST, "access denied");
 
-        CartItem cartItem = new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setItem(menuItem);
-        cartItem.setQuantity(cartDTO.getQuantity());
-        CartItem newCartItem = cartItemRepository.save(cartItem);
-        List<CartItem> itemsInCart = cart.getCartItems();
-        itemsInCart.add(newCartItem);
+        cart.getCartItems().remove(cartItem);
+        cartRepository.save(cart);
 
-        cart.setCartItems(itemsInCart);
-        return cartRepository.save(cart);
+        cartItemRepository.deleteById(cartItemId);
     }
 }

@@ -11,9 +11,13 @@ import lombok.Setter;
 public class CartItemResponseDTO {
     private MenuItems item;
     private Integer quantity;
+    private Integer id;
 
     public CartItemResponseDTO(CartItem item) {
+
+        this.id = item.getId();
         this.item = item.getItem();
         quantity = item.getQuantity();
+        this.quantity = item.getQuantity();
     }
 }
