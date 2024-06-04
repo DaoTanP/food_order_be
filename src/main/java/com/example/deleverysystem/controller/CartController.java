@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.deleverysystem.dto.CartItemQuantityDTO;
 import com.example.deleverysystem.dto.CartRequestDTO;
 import com.example.deleverysystem.dto.CartResponseDTO;
 import com.example.deleverysystem.entity.Cart;
@@ -18,6 +20,7 @@ import com.example.deleverysystem.repository.UserRepository;
 import com.example.deleverysystem.service.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @CrossOrigin("*")
@@ -56,10 +59,20 @@ public class CartController {
         }
     }
 
-    @GetMapping("/removefromcart/{cartItemId}")
+    @DeleteMapping("/removefromcart/{cartItemId}")
     public ResponseEntity<String> removeFromCart(HttpServletRequest request, @PathVariable Integer cartItemId) {
         try {
             cartService.removeFromCart(request, cartItemId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    @PutMapping("/updatequantity")
+    public ResponseEntity<String> updateQuantity(HttpServletRequest request, @RequestBody CartItemQuantityDTO dto) {
+        try {
+            cartService.updateQuantity(request, dto);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(403).build();

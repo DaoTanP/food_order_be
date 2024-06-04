@@ -1,5 +1,6 @@
 package com.example.deleverysystem.service;
 
+import com.example.deleverysystem.dto.CartItemQuantityDTO;
 import com.example.deleverysystem.dto.CartRequestDTO;
 import com.example.deleverysystem.entity.*;
 import com.example.deleverysystem.exception.ErrorMessage;
@@ -81,5 +82,18 @@ public class CartService {
         cartRepository.save(cart);
 
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    public void updateQuantity(HttpServletRequest request, CartItemQuantityDTO dto) throws Exception {
+        Cart cart = getUserCart(request);
+
+        CartItem cartItem = cartItemRepository.findById(dto.getId())
+                .orElseThrow(() -> new ErrorMessage(HttpStatus.NOT_FOUND, "Cart item not found: "));
+        if (cart.getCartItems().indexOf(cartItem) == -1)
+            throw new ErrorMessage(HttpStatus.BAD_REQUEST, "access denied");
+
+        cartItem.setQuantity(dto.getQuantity());
+
+        cartItemRepository.save(cartItem);
     }
 }
